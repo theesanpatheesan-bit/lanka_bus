@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:lanka_bus/core/constants/app_constants.dart';
+import 'package:lanka_bus/core/router/app_router.dart';
+import 'package:lanka_bus/features/auth/domain/entities/user_entity.dart';
 import 'package:lanka_bus/features/auth/presentation/bloc/auth_bloc.dart';
 
-class HomePage extends StatelessWidget {
-  const HomePage({super.key});
+class PassengerHomePage extends StatelessWidget {
+  const PassengerHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,30 +25,29 @@ class HomePage extends StatelessWidget {
       ),
       body: BlocBuilder<AuthBloc, AuthState>(
         builder: (context, state) {
-          final name = state.user?.fullName ?? 'Passenger';
+          final user = state.user;
           return Padding(
             padding: const EdgeInsets.all(24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Ayubowan, $name',
+                  'Ayubowan, ${user?.fullName ?? 'Passenger'}',
                   style: Theme.of(context).textTheme.headlineSmall,
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Search buses across Sri Lanka — Colombo, Kandy, Galle, and more.',
+                  'Role: ${user?.role.label ?? UserRole.passenger.label}',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  'Search intercity buses across Sri Lanka.',
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 32),
                 FilledButton.icon(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Bus search feature — Step 2'),
-                      ),
-                    );
-                  },
+                  onPressed: () => context.push(AppRouter.busSearch),
                   icon: const Icon(Icons.search),
                   label: const Text('Search buses'),
                 ),

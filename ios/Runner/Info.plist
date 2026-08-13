@@ -66,5 +66,24 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera is used by conductors to scan passenger M-Ticket QR codes.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Location is used to share live bus GPS while a trip is in progress.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Background location keeps live trip tracking active for passengers.</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>com.lankabus.track</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>lankabus</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>

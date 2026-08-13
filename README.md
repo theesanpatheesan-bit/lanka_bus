@@ -2,34 +2,41 @@
 
 Bus Booking & Fleet Management Platform for Sri Lanka (Flutter + Supabase).
 
-## Step 1 deliverables
+## Steps 1–7
 
-- PostgreSQL / Supabase schema: `supabase/migrations/`
-- Feature-first Clean Architecture under `lib/`
-- Supabase client bootstrap in `lib/main.dart` + `lib/core/network/supabase_client.dart`
+- Auth/RBAC, search, seats, payments/M-Ticket
+- Operator seat chart, QR boarding, live GPS broadcast
+- Passenger live map tracking + Admin web portal (fleet/routes/approvals)
 
 ## Setup
 
-1. Create a Supabase project.
-2. In the SQL Editor, run in order:
-   - `supabase/migrations/001_initial_schema.sql`
-   - `supabase/migrations/002_rls_policies.sql`
-   - `supabase/migrations/003_seed_routes.sql` (optional)
-3. Copy `.env.example` → `.env` and set `SUPABASE_URL` / `SUPABASE_ANON_KEY`.
-4. `flutter pub get`
-5. `flutter run`
+1. Run SQL migrations `001` … `010` in Supabase (`008`→`009`→`010`).
+2. Enable Realtime for `bus_locations` (migration 010 tries to add it).
+3. Enable Email (+ Phone if needed) in Auth providers.
+4. Set `.env` with Supabase URL/anon key.
+5. Set Google Maps API key in:
+   - `android/app/src/main/AndroidManifest.xml` (`com.google.android.geo.API_KEY`)
+   - `ios/Runner/AppDelegate.swift` (`GMSServices.provideAPIKey`)
+6. `flutter pub get` → `flutter run` (or `flutter run -d chrome` for admin web)
 
-## Architecture
+### Promote admin
 
-```
-lib/
-  core/           # constants, network, theme, utils, errors
-  features/
-    auth/
-    bus_search/
-    seat_booking/
-    tracking/
-    operator_dashboard/
+```sql
+UPDATE public.users SET role = 'admin' WHERE email = 'you@example.com';
 ```
 
-Each feature uses `data / domain / presentation` layers.
+### Operator access for demo fleet
+
+```sql
+UPDATE public.users SET role = 'operator' WHERE email = 'you@example.com';
+
+UPDATE public.operators
+SET owner_user_id = (SELECT id FROM public.users WHERE email = 'you@example.com')
+WHERE br_number = 'BR-DEMO-LANKA-001';
+```
+
+### Test Step 7
+
+1. Operator starts trip GPS → passenger opens M-Ticket → **Track live bus**.
+2. Share link: `lankabus://live-tracking?scheduleId=<uuid>`.
+3. Admin dashboard → Overview / Fleet / Routes / Operator Onboarding.

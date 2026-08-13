@@ -10,11 +10,20 @@ class Formatters {
     decimalDigits: 2,
   );
 
+  static final NumberFormat _lkrWhole = NumberFormat.currency(
+    locale: 'en_LK',
+    symbol: 'LKR ',
+    decimalDigits: 0,
+  );
+
   static final DateFormat _date = DateFormat('dd MMM yyyy');
   static final DateFormat _time = DateFormat('hh:mm a');
   static final DateFormat _dateTime = DateFormat('dd MMM yyyy · hh:mm a');
 
   static String currency(num amount) => _lkr.format(amount);
+
+  /// Ticket-style price: `LKR 2,500`
+  static String priceLkr(num amount) => _lkrWhole.format(amount);
 
   static String date(DateTime value) => _date.format(value.toLocal());
 
